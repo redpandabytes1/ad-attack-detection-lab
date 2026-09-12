@@ -1,0 +1,36 @@
+title: TODO - LLMNR/NBT-NS Poisoning Detection
+id: 361ff70d-6e2d-4d1f-b56e-4038e368271a
+status: experimental
+description: >
+  TODO: this one is genuinely harder to detect cleanly than the other two —
+  LLMNR/NBT-NS poisoning is a network-behavior pattern, not always a
+  single clean Windows Event ID. Document honestly what you were and
+  weren't able to reliably detect, rather than forcing a clean-looking
+  rule that doesn't reflect what you actually found.
+references:
+    - TODO: link to attacks/llmnr-poisoning.md in this repo
+author: <your name>
+date: TODO
+tags:
+    - attack.credential_access
+    - attack.t1557.001  # TODO: confirm against docs/mitre-attack-mapping.md
+
+logsource:
+    product: windows
+    service: security  # TODO: confirm, or consider whether network-level
+                        # detection (outside a Windows Event Log entirely)
+                        # is more appropriate for this specific technique
+
+detection:
+    selection:
+        # TODO: this is the one most likely to need an honest, partial
+        # answer. Research whether Event ID 4649, or a different log
+        # source entirely, actually captures spoofed LLMNR/NBT-NS
+        # responses on a real Windows host in your lab.
+        EventID: 4649
+    condition: selection
+
+falsepositives:
+    - TODO
+
+level: medium  # TODO: reconsider once validated against real logs (Milestone 8)

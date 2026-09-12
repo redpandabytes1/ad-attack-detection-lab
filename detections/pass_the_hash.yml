@@ -1,0 +1,35 @@
+title: TODO - Pass-the-Hash Detection
+id: 8cb713fa-7e55-42a5-b86c-0f4341f646f2
+status: experimental
+description: >
+  TODO: describe what this rule detects, based on what you actually
+  observed in your own lab's event log when authenticating via a captured
+  hash rather than a plaintext password.
+references:
+    - TODO: link to attacks/pass-the-hash.md in this repo
+author: <your name>
+date: TODO
+tags:
+    - attack.lateral_movement
+    - attack.t1550.002  # TODO: confirm against docs/mitre-attack-mapping.md
+
+logsource:
+    product: windows
+    service: security  # TODO: confirm
+
+detection:
+    selection:
+        # TODO: research the Logon Type and Authentication Package fields
+        # for Event ID 4624/4625 — Pass-the-Hash typically produces a
+        # specific combination (NTLM auth package with a Logon Type that
+        # doesn't match interactive logon). Confirm against your own
+        # captured event rather than assuming.
+        EventID:
+            - 4624
+            - 4625
+    condition: selection
+
+falsepositives:
+    - TODO
+
+level: medium  # TODO: reconsider once validated against real logs (Milestone 8)
