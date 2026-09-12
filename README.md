@@ -32,7 +32,7 @@ covering both the offensive and defensive side of the same techniques.
 hypervisor used, VM specs, how the isolated
      network was configured. -->
 
->[!Note]: Some of the credentials are confidential for me and are therefore needed to be sorted out before publishing publicly.
+> [!Note]: Some of the credentials are confidential for me and are therefore needed to be sorted out before publishing publicly.
 
 ## Attacks & Detections
 
