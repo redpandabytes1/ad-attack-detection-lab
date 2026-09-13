@@ -5,6 +5,6 @@
 
 | Attack | Tactic | Technique ID | Technique Name |
 |---|---|---|---|
-| Kerberoasting | | | |
-| Pass-the-Hash | | | |
-| LLMNR/NBT-NS Poisoning | | | |
+| Kerberoasting | Credential Access  | | |
+| Pass-the-Hash | Defense Evasion / Lateral Movement  | | |
+| LLMNR/NBT-NS Poisoning | Credential Access / Collection  | | |
