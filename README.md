@@ -27,8 +27,8 @@ covering both the offensive and defensive side of the same techniques.
 | Role | Hostname | OS | IP (isolated network) |
 |---|---|---|---|
 | Domain Controller | | Windows Server Standard 2025 (Desktop Experience) | |
-| Windows Client | | Windows Server Standard 2025 (Desktop Experience) | |
-| Attacker | speedster | Windows Server Standard 2025 (Desktop Experience) | |
+| Windows Client | bsilverhand | Windows 11 Enterprise evaluation | |
+| Attacker | speedster | Kali Linux 2026.3  | |
 
 ## Setup
 
