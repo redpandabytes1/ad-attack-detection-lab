@@ -1,6 +1,6 @@
 title: Kerberoasting - Lab AES256 Service Ticket Request
 name: kerberoasting_ticket_request
-id: 3d9c5d14-3c6b-4b75-9f3c-5fcd7f9c4a11
+id: 3d9c5d14-3c6b-4b75-9f3c-5fcd7f9c4a11, 0659c285-3377-42ac-996a-75078033e364
 status: experimental
 description: >
   Detects an AES256 Kerberos service ticket request for the deliberately Kerberoastable svc_sql service account used in the Active Directory lab. This rule is intentionally lab-specific: AES256 service-ticket requests are normal Kerberos activity in modern Windows environments and therefore should not be treated as a generic Kerberoasting indicator by themselves.
@@ -10,7 +10,7 @@ references:
     - https://adscanpro.com/blog/disable-rc4-kerberos-cve-2026-20833
     - attacks/kerberoasting.md
 author: Vinay Koli
-date: TODO
+date: 17-09-2026 20:14:27
 tags:
     - attack.credential_access
     - attack.t1558.003
