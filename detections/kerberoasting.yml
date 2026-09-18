@@ -1,34 +1,49 @@
-title: TODO - Kerberoasting Detection
-id: 0659c285-3377-42ac-996a-75078033e364
+title: Kerberoasting - Lab AES256 Service Ticket Request
+name: kerberoasting_ticket_request
+id: 3d9c5d14-3c6b-4b75-9f3c-5fcd7f9c4a11
 status: experimental
 description: >
-  TODO: describe what this rule detects and why the specific field/value
-  conditions below indicate Kerberoasting activity, based on what you
-  actually observed in your own lab's Event ID 4769 logs — not a generic
-  example copied from elsewhere.
+  Detects an AES256 Kerberos service ticket request for the deliberately Kerberoastable svc_sql service account used in the Active Directory lab. This rule is intentionally lab-specific: AES256 service-ticket requests are normal Kerberos activity in modern Windows environments and therefore should not be treated as a generic Kerberoasting indicator by themselves.
+  This lab's DC enforces AES-only Kerberos ticket issuance (Microsoft's RC4 deprecation rollout, CVE-2026-20833), confirmed by this lab's own captured Event 4769 showing TicketEncryptionType 0x12 rather than the classic 0x17 RC4 indicator most existing Kerberoasting rules rely on. Since AES tickets are now normal for legitimate traffic too, encryption  type alone is no longer a usable signal.
 references:
-    - TODO: link to attacks/kerberoasting.md in this repo
-author: <your name>
+    - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4769
+    - https://adscanpro.com/blog/disable-rc4-kerberos-cve-2026-20833
+    - attacks/kerberoasting.md
+author: Vinay Koli
 date: TODO
 tags:
     - attack.credential_access
-    - attack.t1558.003  # TODO: confirm against docs/mitre-attack-mapping.md
-
+    - attack.t1558.003
 logsource:
     product: windows
-    service: security  # TODO: confirm this is the correct log source
-
+    service: security
 detection:
     selection:
         EventID: 4769
-        # TODO: add the specific field/value conditions that distinguish a
-        # Kerberoasting request from normal service ticket activity.
-        # Research the ticket encryption type field — RC4 (0x17) is the
-        # classic tell for a downgrade-style Kerberoasting request — and
-        # confirm against a real captured event from your own lab.
+        ServiceName: 'svc_sql'
+        TicketEncryptionType: '0x12'
+        Status: '0x0'
     condition: selection
-
 falsepositives:
-    - TODO: are there legitimate reasons this might fire? Note them.
-
-level: medium  # TODO: reconsider once validated against real logs (Milestone 8)
+    - Legitimate access to the lab SQL service
+    - Administrative testing against the lab service account
+level: medium
+---
+title: Kerberoasting - Multiple Distinct SPNs Requested By One Account
+status: experimental
+correlation:
+    type: value_count
+    rules:
+        - kerberoasting_ticket_request
+    group-by:
+        - TargetUserName
+    timespan: 10m
+    condition:
+        field: ServiceName
+        gte: 3
+level: high
+falsepositives:
+    - A single admin script or service legitimately touching several
+      SPN-bearing services in a short window — the 3-in-10m threshold is
+      a starting point, worth tuning against your own environment rather
+      than treated as universal.
