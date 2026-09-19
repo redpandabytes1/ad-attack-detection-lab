@@ -10,7 +10,7 @@ covering both the offensive and defensive side of the same techniques.
 > [!NOTE]
 > Some of the credentials are confidential for me and are therefore needed to be sorted out before publishing publicly.
 
-## Planned Features
+## Features
 
 - Isolated lab network with a Domain Controller, client, and attacker VM
 - Domain populated with realistic, exploitable complexity
