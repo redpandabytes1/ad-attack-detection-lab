@@ -39,9 +39,9 @@ hypervisor used, VM specs, how the isolated
 
 | Attack | MITRE ATT&CK ID | Writeup | Detection Rule |
 |---|---|---|---|
-| Kerberoasting | TODO | [attacks/kerberoasting.md](attacks/kerberoasting.md) | [detections/kerberoasting.yml](detections/kerberoasting.yml) |
-| Pass-the-Hash | TODO | [attacks/pass-the-hash.md](attacks/pass-the-hash.md) | [detections/pass_the_hash.yml](detections/pass_the_hash.yml) |
-| LLMNR/NBT-NS Poisoning | TODO | [attacks/llmnr-poisoning.md](attacks/llmnr-poisoning.md) | [detections/llmnr_poisoning.yml](detections/llmnr_poisoning.yml) |
+| Kerberoasting | T1550.003 | [attacks/kerberoasting.md](attacks/kerberoasting.md) | [detections/kerberoasting.yml](detections/kerberoasting.yml) |
+| Pass-the-Hash | T1550.002 | [attacks/pass-the-hash.md](attacks/pass-the-hash.md) | [detections/pass_the_hash.yml](detections/pass_the_hash.yml) |
+| LLMNR/NBT-NS Poisoning | T1557.001 | [attacks/llmnr-poisoning.md](attacks/llmnr-poisoning.md) | [detections/llmnr_poisoning.yml](detections/llmnr_poisoning.yml) |
 
 ## Legal & Ethical Use
 
