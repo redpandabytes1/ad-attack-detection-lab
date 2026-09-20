@@ -1,36 +1,57 @@
-title: TODO - LLMNR/NBT-NS Poisoning Detection
+title: LLMNR/NBT-NS Poisoning - Detection Notes/ Hypothesis
 id: 361ff70d-6e2d-4d1f-b56e-4038e368271a
 status: experimental
+
 description: >
-  TODO: this one is genuinely harder to detect cleanly than the other two —
-  LLMNR/NBT-NS poisoning is a network-behavior pattern, not always a
-  single clean Windows Event ID. Document honestly what you were and
-  weren't able to reliably detect, rather than forcing a clean-looking
-  rule that doesn't reflect what you actually found.
+  Unlike Kerberoasting and Pass-the-Hash, LLMNR/NBT-NS poisoning does not produce a clean, discrete Windows Security Event Log signature — it is spoofed network traffic, not an authentication event. Reliable detection requires network-level monitoring (e.g. a Zeek/Suricata rule watching for LLMNR/NBT-NS responses from hosts other than the authorized DNS server) rather than a Windows Event Log-based Sigma rule. This file documents that limitation rather than forcing an inaccurate rule.
+  Documents network-layer detection logic for LLMNR/NBT-NS poisoning. The attack was successfully demonstrated in the isolated lab with Responder, which captured an NTLMv2 authentication response. Packet capture also confirmed LLMNR traffic from the Windows client. A reliable production detector should identify LLMNR (UDP/5355) or NBT-NS (UDP/137) responses originating from hosts that are not authorized to provide name resolution.
 references:
-    - TODO: link to attacks/llmnr-poisoning.md in this repo
-author: <your name>
-date: TODO
+    - https://attack.mitre.org/techniques/T1557/001/
+    - attacks/llmnr-poisoning.md
+
+author: Vinay Koli
+date: 19-09-2026
+
 tags:
     - attack.credential_access
-    - attack.t1557.001  # TODO: confirm against docs/mitre-attack-mapping.md
+    - attack.t1557.001
 
 logsource:
-    product: windows
-    service: security  # TODO: confirm, or consider whether network-level
-                        # detection (outside a Windows Event Log entirely)
-                        # is more appropriate for this specific technique
+    category: network
+    product: zeek
 
 detection:
-    selection:
-        # TODO: this is the one most likely to need an honest, partial
-        # answer. Research whether Event ID 4649, or a different log
-        # source entirely, actually captures spoofed LLMNR/NBT-NS
-        # responses on a real Windows host in your lab.
-        EventID: 4649
-    condition: selection
+    selection_llmnr:
+        protocol: udp
+        destination_port: 5355
+
+    selection_nbns:
+        protocol: udp
+        destination_port: 137
+
+    condition: selection_llmnr or selection_nbns
+
+    # Detection logic:
+    # The presence of LLMNR/NBT-NS traffic alone is not malicious.
+    # A production detector should correlate these responses with the
+    # responding source IP and compare that source against the organization's
+    # authorized DNS/name-resolution infrastructure.
+    #
+    # Alert condition:
+    #   - An LLMNR response is observed on UDP/5355 OR an NBT-NS response
+    #     is observed on UDP/137;
+    #   - The responding host is not an authorized name-resolution server;
+    #   - The response is associated with a failed/unresolved name lookup.
+    #
+    # Validation status:
+    #   This project observed LLMNR traffic with tcpdump and successfully
+    #   demonstrated poisoning/capture with Responder.
+    #   No Zeek/Suricata deployment was performed, so this rule documents
+    #   the detection logic and required telemetry rather than claiming a
+    #   production-deployed network detector.
 
 falsepositives:
-    - TODO
+    - Legitimate hosts providing authorized name-resolution services
+    - Controlled penetration testing or security lab activity
 
-level: medium  # TODO: reconsider once validated against real logs (Milestone 8)
+level: medium
