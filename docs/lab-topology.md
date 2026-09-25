@@ -6,9 +6,9 @@
 
 | Role | Hostname | OS | IP (isolated network) |
 |---|---|---|---|
-| Domain Controller | | | |
-| Windows Client | | | |
-| Attacker | | | |
+| Domain Controller | WIN-4LJEJ0TK4QI | Windows Server 2025 Standard Evaluation (Desktop Experience) | 10.10.10.10 |
+| Windows Client | DESKTOP-9J6SCIV | Windows 11 Enterprise LTSC 2024 Evaluation | 10.10.10.220 |
+| Attacker | speedster | Kali Linux 2026.3  | 10.10.10.248
 
 ## Network Configuration
 
