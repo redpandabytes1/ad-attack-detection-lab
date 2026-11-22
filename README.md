@@ -66,23 +66,6 @@ The lab's account names and structure were chosen for a small fictional organiza
 
 Detailed reports: [Kerberoasting](attacks/kerberoasting.md), [Pass-the-Hash](attacks/pass-the-hash.md), and [LLMNR/NBT-NS poisoning](attacks/llmnr-poisoning.md).
 
-## Wazuh deployment and validation
-
-Wazuh 4.14.7 was installed as an all-in-one manager/indexer/dashboard VM at `10.10.10.20`. Windows agents were installed on both Windows endpoints and enrolled under the names `adlab-dc01` and `adlab-client01`. At the end of the deployment work, both agents appeared as **Active** in the manager and dashboard.
-
-The validation distinguished three different outcomes:
-
-1. **Event generated:** Windows recorded the event in its Security log.
-2. **Event collected / archived:** the event reached Wazuh and appeared in `wazuh-archives-*`.
-3. **Alert generated:** an event matched a Wazuh rule and appeared in `wazuh-alerts-*`.
-
-For the Kerberoasting run, the specific Event 4769 was archived but did not produce a corresponding alert. A separate DC-side Event 4624 for `LAB\bsilverhand`, using NTLM from `10.10.10.248`, generated rule `92652` at level 6. That rule's description says “possible pass-the-hash,” but its condition checks remote IPv4 logon followed by an NTLM authentication package; it does not prove hash reuse or detect Kerberoasting specifically. Separately, for the client-side Pass-the-Hash test around 20:14, the user confirmed that Event 4624 activity appeared in both Wazuh archives and alerts for `adlab-client01`; the exact client-side rule ID and level were not recorded.
-
-The Wazuh built-in ruleset was examined. The chain observed was `60103` (Windows audit success) → `60106` (Windows logon success, including event IDs 4624 and 4769) → `92651` (remote IPv4 address, excluding `127.0.0.1`) → `92652` (authentication package `NTLM`). The Kerberos Event 4769 used an IPv4-mapped IPv6 address (`::ffff:10.10.10.248`) and was Kerberos ticket telemetry, not NTLM. The address-family mismatch is a plausible reason it did not enter the remote-NTLM child-rule chain; it is documented as an analysis, not as a fully isolated root-cause test.
-
-**Sigma vs. Wazuh:** The repository's detection YAML files are separate Sigma-format artifacts. They were not automatically imported or executed by Wazuh merely because they exist. The rule 92652 alert came from Wazuh's packaged ruleset. This project does not claim that its Sigma YAML rules were directly executed by Wazuh.
-
-See [docs/wazuh-validation.md](docs/wazuh-validation.md) for event fields, rule behavior, and evidence status. Remaining unverified publication items are listed in [docs/remaining-confirmations.md](docs/remaining-confirmations.md).
 
 ## MITRE ATT&CK mapping
 
