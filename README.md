@@ -25,24 +25,9 @@ The virtual machines were hosted on Fedora Linux using QEMU/KVM and virt-manager
 
 **Naming note:** VM names, guest OS hostnames, and Wazuh agent names are separate identifiers. The Wazuh agent names used were `adlab-dc01` and `adlab-client01`.
 
-## Architecture
+## Lab Topology
 
-```mermaid
-flowchart TB
-  HOST[ Fedora host<br/>QEMU/KVM + virt-manager ]
-  subgraph NET[adlab-isolated — 10.10.10.0/24]
-    K[Kali Linux<br/>10.10.10.248]
-    DC[adlab-dc01<br/>Windows Server 2025<br/>10.10.10.10]
-    CL[adlab-client01<br/>Windows 11 Enterprise LTSC 2024<br/>10.10.10.220]
-    W[adlab-ubuntu-wazuh<br/>Ubuntu Server + Wazuh 4.14.7<br/>10.10.10.20]
-  end
-  HOST --- NET
-  K --- DC
-  K --- CL
-  DC --- CL
-  DC --> W
-  CL --> W
-```
+![Active Directory Attack and Detection Lab Topology](docs/screenshots/lab-topology.png)
 
 See [docs/lab-topology.md](docs/lab-topology.md) for the addressing, Active Directory layout, and telemetry flow.
 
