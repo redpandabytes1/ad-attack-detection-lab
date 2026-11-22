@@ -1,41 +1,19 @@
 # MITRE ATT&CK Mapping
 
-This table maps the three attack scenarios demonstrated in the lab to their corresponding MITRE ATT&CK techniques.
+The technique IDs below were checked against the current MITRE ATT&CK Enterprise pages on 2 November 2026.
 
-| Attack | Tactic | Technique ID | Technique Name |
-|---|---|---|---|
-| Kerberoasting | Credential Access | T1558.003 | Steal or Forge Kerberos Tickets: Kerberoasting |
-| Pass-the-Hash | Defense Evasion / Lateral Movement | T1550.002 | Use Alternate Authentication Material: Pass the Hash |
-| LLMNR/NBT-NS Poisoning | Credential Access / Collection  | T1557.001 | Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay |
+| Lab experiment | Technique ID | Official technique name | Tactic / context | What the lab demonstrated |
+|---|---|---|---|---|
+| Kerberoasting | [T1558.003](https://attack.mitre.org/techniques/T1558/003/) | Steal or Forge Kerberos Tickets: Kerberoasting | Credential Access | Requested a TGS for the SPN-backed `svc_sql` account and attempted offline password recovery. |
+| Pass-the-Hash | [T1550.002](https://attack.mitre.org/techniques/T1550/002/) | Use Alternate Authentication Material: Pass the Hash | Lateral Movement | Used a local Administrator NTLM hash with Impacket `wmiexec.py` to authenticate remotely to the lab client. |
+| LLMNR/NBT-NS poisoning | [T1557.001](https://attack.mitre.org/techniques/T1557/001/) | Adversary-in-the-Middle: Name Resolution Poisoning and SMB Relay | Adversary-in-the-Middle; credential collection/relay context | Responder captured an NTLMv2 response after LLMNR name-resolution traffic was observed. NBT-NS was not confirmed in the supplied packet evidence. |
 
-## Lab Notes
+## Detection context
 
-### Kerberoasting
+- MITRE ATT&CK T1558.003 describes Kerberoasting as obtaining TGS tickets for SPNs and attempting to crack service-account ticket material offline. See [Detection Strategy DET0157](https://attack.mitre.org/detectionstrategies/DET0157/) for an example of combining Event 4769, encryption-type information, request volume, and service-account baselines.
+- MITRE ATT&CK T1550.002 describes use of a stolen password hash to authenticate without the cleartext password. See [Detection Strategy DET0409](https://attack.mitre.org/detectionstrategies/DET0409/) for correlation-oriented detection context.
+- MITRE ATT&CK T1557.001 describes name-resolution poisoning using LLMNR/NBT-NS/mDNS responses. This lab captured LLMNR evidence; it did not validate NBT-NS traffic or deploy a network IDS.
 
-The lab demonstrated Kerberoasting against the intentionally SPN-backed
-`svc_sql` service account. The original lab procedure expected an RC4
-Kerberos service ticket, but the Windows Server 2025 domain controller
-issued an AES256 service ticket after the RC4-dependent request was rejected.
-The successful TGS was etype 18 and was cracked offline with Hashcat mode
-19700.
+## Scope note
 
-### Pass-the-Hash
-
-The lab demonstrated reuse of a local Administrator NTLM hash to authenticate
-to the Windows client without supplying the plaintext password. The
-demonstration used Impacket's `secretsdump.py` and `wmiexec.py` within the
-isolated lab network.
-
-### LLMNR/NBT-NS Poisoning
-
-The lab demonstrated LLMNR/NBT-NS poisoning using Responder and captured an
-NTLMv2 authentication response. Packet capture confirmed LLMNR traffic on
-UDP/5355. Direct Windows Security Event Log detection of the poisoning stage
-was not treated as reliable; network-layer monitoring was identified as the
-appropriate detection layer.
-
-## References
-
-- MITRE ATT&CK — T1558.003: Kerberoasting
-- MITRE ATT&CK — T1550.002: Pass the Hash
-- MITRE ATT&CK — T1557.001: LLMNR/NBT-NS Poisoning and SMB Relay
+Technique mapping classifies the behavior demonstrated in the controlled lab. A technique ID in a YAML file or report does not itself mean that Wazuh detected the technique. Wazuh rule matches, Sigma rules, Windows event collection, and network-sensor detections are separate artifacts and must be reported separately.
