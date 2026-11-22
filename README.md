@@ -72,13 +72,15 @@ See [docs/mitre-attack-mapping.md](docs/mitre-attack-mapping.md).
 │   ├── pass-the-hash.md
 │   └── llmnr-poisoning.md
 ├── detections/
-│   └── (Sigma YAML artifacts; see each file for its exact status)
+│   ├── kerberoasting.yml
+│   ├── pass-the-hash.yml
+│   └── llmnr-poisoning.yml
 └── docs/
     ├── lab-topology.md
     ├── mitre-attack-mapping.md
     ├── wazuh-validation.md
     ├── deviations-and-lessons.md
-    ├── evidence-index.md
+    ├── mitre-references.md
     └── screenshots/
 ```
 
