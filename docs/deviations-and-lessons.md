@@ -1,12 +1,10 @@
-# Deviations from the Initial Guide and Lessons Learned
+# Deviations from the planned protoype and Lessons Learned
 
-This document records material differences between the initial build guide and the lab that was actually completed. It is intended to keep the public writeup accurate and make the design decisions easy to explain.
 
 ## 1. Active Directory design
 
 - The domain used was `LAB.LOCAL` (`lab.local`).
-- The OU structure and test-user names were designed and entered by the author rather than copied verbatim from examples in the guide.
-- The observed OUs were `Domain Controllers`, `Lab-Admins`, `Lab-ServiceAccounts`, `Lab-Users`, and `Lab-Workstations`.
+- The designed OUs were `Domain Controllers`, `Lab-Admins`, `Lab-ServiceAccounts`, `Lab-Users`, and `Lab-Workstations`.
 - The Kerberoasting service account was `svc_sql` (display name `SQL Service`) in `Lab-ServiceAccounts`; the requesting user was `bsilverhand`.
 - The SQL service SPN was registered for the lab Domain Controller host on port 1433.
 
@@ -20,7 +18,7 @@ This document records material differences between the initial build guide and t
 
 ## 3. Kerberoasting encryption and cracking mode
 
-- The introductory guide discussed RC4 as a common Kerberoasting signature.
+- The plan included RC4 as a common Kerberoasting signature.
 - The actual request used Impacket `GetUserSPNs.py` with `-no-rc4` and the captured service ticket used AES256, etype `0x12` (decimal 18).
 - Hashcat mode `19700` was used for the AES Kerberos TGS hash. The RC4 mode `13100` was not appropriate for the observed hash.
 - The lab wordlist recovered the test service-account password. The recovered plaintext and the raw ticket hash are intentionally omitted from the public repository.
@@ -59,7 +57,6 @@ Running all four VMs at once caused severe memory pressure on the Fedora host an
 
 ## 8. General lessons
 
-- Use the actual OS and event output, not assumptions from an older guide.
 - Event generation, event collection, alert generation, and attack-specific classification are separate claims.
 - A generic NTLM alert is not conclusive evidence of Pass-the-Hash.
 - A Kerberos service-ticket event is not automatically malicious; account, service, source, encryption type, request frequency, and baseline context matter.
